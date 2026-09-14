@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { getSignForDate, type ZodiacSign } from './zodiac'
 
 export type SubscriptionTier = 'apprentice' | 'mystic' | 'oracle'
+export type Gender = 'female' | 'male' | 'non-binary' | 'prefer-not-to-say'
 
 export interface Wallet {
   coins: number
@@ -11,6 +12,7 @@ export interface Wallet {
 export interface UserProfile {
   name: string
   birthDate: string | null // ISO date, e.g. "1995-06-21"
+  gender: Gender | null
   tier: SubscriptionTier
   unlockedMineralIds: string[]
   streak: number
@@ -30,6 +32,7 @@ const DOSSIER_FIELD_REWARD_COINS = 25
 const DEFAULT_PROFILE: UserProfile = {
   name: '',
   birthDate: null,
+  gender: null,
   tier: 'apprentice',
   unlockedMineralIds: ['quartz', 'amethyst'],
   streak: 1,
@@ -46,7 +49,7 @@ interface StoreValue {
   isOnboarded: boolean
   isPremium: boolean
   setProfile: (updater: (prev: UserProfile) => UserProfile) => void
-  completeOnboarding: (name: string, birthDate: string) => void
+  completeOnboarding: (name: string, birthDate: string, gender: Gender) => void
   setTier: (tier: SubscriptionTier) => void
   unlockMineral: (mineralId: string) => void
   updateDossier: (fields: Partial<UserProfile['dossier']>) => void
@@ -88,10 +91,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value: StoreValue = {
     profile,
     sign,
-    isOnboarded: Boolean(profile.name && profile.birthDate),
+    isOnboarded: Boolean(profile.name && profile.birthDate && profile.gender),
     isPremium: profile.tier !== 'apprentice',
     setProfile: (updater) => setProfileState(updater),
-    completeOnboarding: (name, birthDate) => setProfileState((prev) => ({ ...prev, name, birthDate })),
+    completeOnboarding: (name, birthDate, gender) => setProfileState((prev) => ({ ...prev, name, birthDate, gender })),
     setTier: (tier) => setProfileState((prev) => ({ ...prev, tier })),
     unlockMineral: (mineralId) =>
       setProfileState((prev) =>

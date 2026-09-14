@@ -6,6 +6,7 @@ import { Home } from './pages/Home'
 import { Minerals } from './pages/Minerals'
 import { MoonCalendar } from './pages/MoonCalendar'
 import { Onboarding } from './pages/Onboarding'
+import { Privacy } from './pages/Privacy'
 import { Profile } from './pages/Profile'
 import { Shop } from './pages/Shop'
 import { Tarot } from './pages/Tarot'
@@ -21,6 +22,7 @@ function App() {
   return (
     <Routes>
       <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route
         element={
           <RequireOnboarding>
