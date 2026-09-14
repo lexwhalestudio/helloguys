@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { useStore } from './lib/store'
+import { Auth } from './pages/Auth'
 import { Compatibility } from './pages/Compatibility'
 import { Home } from './pages/Home'
 import { Minerals } from './pages/Minerals'
@@ -12,8 +13,15 @@ import { Shop } from './pages/Shop'
 import { Tarot } from './pages/Tarot'
 import { Upgrade } from './pages/Upgrade'
 
+function RequireAccount({ children }: { children: React.ReactNode }) {
+  const { hasAccount } = useStore()
+  if (!hasAccount) return <Navigate to="/login" replace />
+  return <>{children}</>
+}
+
 function RequireOnboarding({ children }: { children: React.ReactNode }) {
-  const { isOnboarded } = useStore()
+  const { hasAccount, isOnboarded } = useStore()
+  if (!hasAccount) return <Navigate to="/login" replace />
   if (!isOnboarded) return <Navigate to="/onboarding" replace />
   return <>{children}</>
 }
@@ -21,8 +29,16 @@ function RequireOnboarding({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <Routes>
-      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/login" element={<Auth />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route
+        path="/onboarding"
+        element={
+          <RequireAccount>
+            <Onboarding />
+          </RequireAccount>
+        }
+      />
       <Route
         element={
           <RequireOnboarding>

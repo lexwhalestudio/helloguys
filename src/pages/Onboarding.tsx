@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { PublicShell } from '../components/PublicShell'
 import { getAge, MIN_AGE } from '../lib/age'
 import { getSignForDate } from '../lib/zodiac'
 import { useStore, type Gender } from '../lib/store'
@@ -38,7 +39,8 @@ export function Onboarding() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 pt-10 text-center">
+    <PublicShell>
+    <div className="flex flex-col items-center gap-6 text-center">
       <span className="text-5xl">🔮</span>
       <div>
         <h1 className="font-display text-2xl text-gold">Welcome, wanderer.</h1>
@@ -114,5 +116,6 @@ export function Onboarding() {
         </p>
       </form>
     </div>
+    </PublicShell>
   )
 }

@@ -10,6 +10,7 @@ export interface Wallet {
 }
 
 export interface UserProfile {
+  email: string | null
   name: string
   birthDate: string | null // ISO date, e.g. "1995-06-21"
   gender: Gender | null
@@ -30,6 +31,7 @@ const EMPTY_DOSSIER = { birthTime: '', birthPlace: '', focusArea: '', relationsh
 const DOSSIER_FIELD_REWARD_COINS = 25
 
 const DEFAULT_PROFILE: UserProfile = {
+  email: null,
   name: '',
   birthDate: null,
   gender: null,
@@ -46,9 +48,13 @@ const STORAGE_KEY = 'mystic-companion-profile'
 interface StoreValue {
   profile: UserProfile
   sign: ZodiacSign | null
+  hasAccount: boolean
   isOnboarded: boolean
   isPremium: boolean
   setProfile: (updater: (prev: UserProfile) => UserProfile) => void
+  register: (email: string) => void
+  login: (email: string) => boolean
+  logout: () => void
   completeOnboarding: (name: string, birthDate: string, gender: Gender) => void
   setTier: (tier: SubscriptionTier) => void
   unlockMineral: (mineralId: string) => void
@@ -91,9 +97,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value: StoreValue = {
     profile,
     sign,
+    hasAccount: Boolean(profile.email),
     isOnboarded: Boolean(profile.name && profile.birthDate && profile.gender),
     isPremium: profile.tier !== 'apprentice',
     setProfile: (updater) => setProfileState(updater),
+    register: (email) => setProfileState((prev) => ({ ...prev, email: email.trim().toLowerCase() })),
+    login: (email) => {
+      const normalized = email.trim().toLowerCase()
+      if (!profile.email || profile.email !== normalized) return false
+      return true
+    },
+    logout: () => setProfileState(() => DEFAULT_PROFILE),
     completeOnboarding: (name, birthDate, gender) => setProfileState((prev) => ({ ...prev, name, birthDate, gender })),
     setTier: (tier) => setProfileState((prev) => ({ ...prev, tier })),
     unlockMineral: (mineralId) =>

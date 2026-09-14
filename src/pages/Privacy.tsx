@@ -1,8 +1,10 @@
 import { Card } from '../components/Card'
+import { PublicShell } from '../components/PublicShell'
 
 export function Privacy() {
   return (
-    <div className="flex flex-col gap-4 pt-6">
+    <PublicShell>
+    <div className="flex flex-col gap-4">
       <h1 className="text-center font-display text-xl text-gold">Privacy — Test Build</h1>
       <Card>
         <p className="text-sm text-mystic-200/80">
@@ -21,5 +23,6 @@ export function Privacy() {
       </Card>
       <p className="text-center text-[11px] text-mystic-200/40">Questions about this test? Ask whoever sent you the link.</p>
     </div>
+    </PublicShell>
   )
 }

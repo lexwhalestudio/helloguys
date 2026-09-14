@@ -1,8 +1,15 @@
+import { useNavigate } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { useStore } from '../lib/store'
 
 export function Profile() {
-  const { profile, sign, dossierCompletion, updateDossier } = useStore()
+  const { profile, sign, dossierCompletion, updateDossier, logout } = useStore()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -60,6 +67,13 @@ export function Profile() {
           </label>
         </div>
       </Card>
+
+      <button
+        onClick={handleLogout}
+        className="rounded-xl border border-mystic-600/30 py-3 text-sm font-semibold text-mystic-200/70"
+      >
+        Log out (reset this device's test profile)
+      </button>
     </div>
   )
 }
