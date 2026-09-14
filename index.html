@@ -1,58 +1,13 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Красивый вход</title>
-    <style>
-        body {
-            background-color: pink;
-            text-align: center;
-            font-family: 'Segoe UI', 'Arial', system-ui;
-            padding-top: 100px;
-        }
-        /* общий стиль для всех кнопок */
-        button {
-            cursor: pointer;
-            border: none;
-            border-radius: 30px;
-            font-weight: bold;        /* жирный шрифт */
-            font-style: italic;       /* наклонный шрифт */
-            background-color: white;
-            margin: 20px;
-            transition: transform 0.2s;
-        }
-        button:hover {
-            transform: scale(1.02);
-        }
-        /* маленькая кнопка (остаётся как была) */
-        .small-btn {
-            font-size: 16px;
-            padding: 10px 20px;
-        }
-        /* большая кнопка: в 2 раза больше маленькой (шрифт 32px, отступы в 2 раза) */
-        .large-btn {
-            font-size: 32px;          /* 16 * 2 = 32 */
-            padding: 20px 40px;       /* 10*2=20, 20*2=40 */
-            background-color: red;
-            color: white;
-        }
-        h1 {
-            font-family: 'Segoe UI', 'Arial', system-ui;
-            font-weight: bold;
-            font-style: italic;
-            color: #b0003a;
-        }
-        p {
-            font-size: 18px;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body>
-    <h1>Поздравляю, вы первый посетитель сайта! Добро пожаловать!</h1>
-    <p>Выберите вариант входа:</p>
-    <button class="small-btn" onclick="location.href='page1.html';">Вход для всех</button>
-    <br>
-    <button class="large-btn" onclick="location.href='page2.html';">Вход только для красивых</button>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mystic Companion</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
