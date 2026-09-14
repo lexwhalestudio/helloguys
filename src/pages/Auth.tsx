@@ -33,16 +33,22 @@ export function Auth() {
     if (!canSubmit) return
 
     if (mode === 'register') {
-      register(identifier.trim())
+      const result = register(identifier.trim(), password)
+      if (result === 'exists') {
+        setError('An account with that email or username already exists on this device. Try Log In instead.')
+        return
+      }
       navigate('/onboarding')
       return
     }
 
-    const ok = login(identifier.trim())
-    if (ok) {
+    const result = login(identifier.trim(), password)
+    if (result === 'ok') {
       navigate('/')
+    } else if (result === 'wrong-password') {
+      setError('Wrong password for that account.')
     } else {
-      setError("No account found on this device with that email. Try Register, or check your spelling.")
+      setError('No account found on this device with that email or username. Try Register, or check your spelling.')
     }
   }
 
