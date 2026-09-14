@@ -35,7 +35,7 @@ export function Onboarding() {
     setAgeError(null)
 
     completeOnboarding(name.trim(), birthDate, gender)
-    navigate('/')
+    navigate('/guide')
   }
 
   return (

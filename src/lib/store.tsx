@@ -19,6 +19,7 @@ export interface UserProfile {
   streak: number
   wallet: Wallet
   dossierRewarded: string[]
+  firstRunComplete: boolean
   dossier: {
     birthTime: string
     birthPlace: string
@@ -29,6 +30,7 @@ export interface UserProfile {
 
 const EMPTY_DOSSIER = { birthTime: '', birthPlace: '', focusArea: '', relationshipStatus: '' }
 const DOSSIER_FIELD_REWARD_COINS = 25
+export const WELCOME_GIFT: Wallet = { coins: 150, gems: 50 }
 
 const DEFAULT_PROFILE: UserProfile = {
   email: null,
@@ -38,8 +40,9 @@ const DEFAULT_PROFILE: UserProfile = {
   tier: 'apprentice',
   unlockedMineralIds: ['quartz', 'amethyst'],
   streak: 1,
-  wallet: { coins: 150, gems: 50 },
+  wallet: { coins: 0, gems: 0 },
   dossierRewarded: [],
+  firstRunComplete: false,
   dossier: EMPTY_DOSSIER,
 }
 
@@ -56,6 +59,7 @@ interface StoreValue {
   login: (email: string) => boolean
   logout: () => void
   completeOnboarding: (name: string, birthDate: string, gender: Gender) => void
+  claimWelcomeGift: () => void
   setTier: (tier: SubscriptionTier) => void
   unlockMineral: (mineralId: string) => void
   updateDossier: (fields: Partial<UserProfile['dossier']>) => void
@@ -109,6 +113,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
     logout: () => setProfileState(() => DEFAULT_PROFILE),
     completeOnboarding: (name, birthDate, gender) => setProfileState((prev) => ({ ...prev, name, birthDate, gender })),
+    claimWelcomeGift: () =>
+      setProfileState((prev) =>
+        prev.firstRunComplete
+          ? prev
+          : {
+              ...prev,
+              firstRunComplete: true,
+              wallet: { coins: prev.wallet.coins + WELCOME_GIFT.coins, gems: prev.wallet.gems + WELCOME_GIFT.gems },
+            },
+      ),
     setTier: (tier) => setProfileState((prev) => ({ ...prev, tier })),
     unlockMineral: (mineralId) =>
       setProfileState((prev) =>

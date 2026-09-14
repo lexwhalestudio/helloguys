@@ -3,6 +3,8 @@ import { Layout } from './components/Layout'
 import { useStore } from './lib/store'
 import { Auth } from './pages/Auth'
 import { Compatibility } from './pages/Compatibility'
+import { Gift } from './pages/Gift'
+import { Guide } from './pages/Guide'
 import { Home } from './pages/Home'
 import { Minerals } from './pages/Minerals'
 import { MoonCalendar } from './pages/MoonCalendar'
@@ -19,10 +21,18 @@ function RequireAccount({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
-function RequireOnboarding({ children }: { children: React.ReactNode }) {
+function RequireProfile({ children }: { children: React.ReactNode }) {
   const { hasAccount, isOnboarded } = useStore()
   if (!hasAccount) return <Navigate to="/login" replace />
   if (!isOnboarded) return <Navigate to="/onboarding" replace />
+  return <>{children}</>
+}
+
+function RequireOnboarding({ children }: { children: React.ReactNode }) {
+  const { hasAccount, isOnboarded, profile } = useStore()
+  if (!hasAccount) return <Navigate to="/login" replace />
+  if (!isOnboarded) return <Navigate to="/onboarding" replace />
+  if (!profile.firstRunComplete) return <Navigate to="/guide" replace />
   return <>{children}</>
 }
 
@@ -37,6 +47,22 @@ function App() {
           <RequireAccount>
             <Onboarding />
           </RequireAccount>
+        }
+      />
+      <Route
+        path="/guide"
+        element={
+          <RequireProfile>
+            <Guide />
+          </RequireProfile>
+        }
+      />
+      <Route
+        path="/gift"
+        element={
+          <RequireProfile>
+            <Gift />
+          </RequireProfile>
         }
       />
       <Route
