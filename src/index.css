@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-void: #0f0b1e;
-  --color-void-light: #1a1430;
-  --color-mystic-50: #f4f1fb;
-  --color-mystic-200: #d8caf5;
-  --color-mystic-400: #a78bfa;
-  --color-mystic-500: #8b5cf6;
-  --color-mystic-600: #7c3aed;
-  --color-gold: #f5c451;
-  --color-gold-dim: #b8944a;
+  /* Palette inspired by the Lord of Mysteries key art: deep navy-black void,
+     icy frost blues, a cold teal accent, warm gold for the premium/tower highlights. */
+  --color-void: #070b14;
+  --color-void-light: #101a2c;
+  --color-mystic-50: #e9f1f7;
+  --color-mystic-200: #a7bdd1;
+  --color-mystic-400: #4fb3c9;
+  --color-mystic-500: #2f96ac;
+  --color-mystic-600: #1c7488;
+  --color-gold: #dbb567;
+  --color-gold-dim: #a3813f;
   --font-display: "Georgia", "Iowan Old Style", serif;
   --font-body: system-ui, "Segoe UI", Roboto, sans-serif;
 }

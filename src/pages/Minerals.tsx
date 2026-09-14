@@ -4,7 +4,7 @@ import { useStore } from '../lib/store'
 
 const RARITY_COLOR: Record<string, string> = {
   common: 'text-mystic-200/70',
-  uncommon: 'text-emerald-300',
+  uncommon: 'text-mystic-50',
   rare: 'text-mystic-400',
   legendary: 'text-gold',
 }
