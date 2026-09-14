@@ -11,19 +11,28 @@ const NAV_ITEMS = [
 ]
 
 export function Layout() {
-  const { isPremium } = useStore()
+  const { isPremium, profile } = useStore()
 
   return (
     <div className="mx-auto flex min-h-screen max-w-xl flex-col bg-void">
-      <header className="flex items-center justify-between border-b border-mystic-600/20 px-4 py-3">
+      <header className="flex items-center justify-between gap-2 border-b border-mystic-600/20 px-4 py-3">
         <span className="font-display text-lg text-gold">✦ Mystic Companion</span>
-        {isPremium ? (
-          <span className="rounded-full bg-gold/20 px-3 py-1 text-xs font-semibold text-gold">Premium</span>
-        ) : (
-          <NavLink to="/upgrade" className="rounded-full bg-mystic-600 px-3 py-1 text-xs font-semibold text-white">
-            Upgrade
+        <div className="flex items-center gap-2">
+          <NavLink
+            to="/shop"
+            className="flex items-center gap-2 rounded-full bg-void-light px-2.5 py-1 text-xs font-semibold text-mystic-50"
+          >
+            <span>🪙 {profile.wallet.coins}</span>
+            <span>💎 {profile.wallet.gems}</span>
           </NavLink>
-        )}
+          {isPremium ? (
+            <span className="rounded-full bg-gold/20 px-3 py-1 text-xs font-semibold text-gold">Premium</span>
+          ) : (
+            <NavLink to="/upgrade" className="rounded-full bg-mystic-600 px-3 py-1 text-xs font-semibold text-white">
+              Upgrade
+            </NavLink>
+          )}
+        </div>
       </header>
 
       <main className="flex-1 px-4 py-4">

@@ -3,12 +3,19 @@ import { getSignForDate, type ZodiacSign } from './zodiac'
 
 export type SubscriptionTier = 'apprentice' | 'mystic' | 'oracle'
 
+export interface Wallet {
+  coins: number
+  gems: number
+}
+
 export interface UserProfile {
   name: string
   birthDate: string | null // ISO date, e.g. "1995-06-21"
   tier: SubscriptionTier
   unlockedMineralIds: string[]
   streak: number
+  wallet: Wallet
+  dossierRewarded: string[]
   dossier: {
     birthTime: string
     birthPlace: string
@@ -18,6 +25,7 @@ export interface UserProfile {
 }
 
 const EMPTY_DOSSIER = { birthTime: '', birthPlace: '', focusArea: '', relationshipStatus: '' }
+const DOSSIER_FIELD_REWARD_COINS = 25
 
 const DEFAULT_PROFILE: UserProfile = {
   name: '',
@@ -25,6 +33,8 @@ const DEFAULT_PROFILE: UserProfile = {
   tier: 'apprentice',
   unlockedMineralIds: ['quartz', 'amethyst'],
   streak: 1,
+  wallet: { coins: 150, gems: 50 },
+  dossierRewarded: [],
   dossier: EMPTY_DOSSIER,
 }
 
@@ -41,6 +51,10 @@ interface StoreValue {
   unlockMineral: (mineralId: string) => void
   updateDossier: (fields: Partial<UserProfile['dossier']>) => void
   dossierCompletion: number
+  earnCoins: (amount: number) => void
+  earnGems: (amount: number) => void
+  spendCoins: (amount: number) => boolean
+  spendGems: (amount: number) => boolean
 }
 
 const StoreContext = createContext<StoreValue | null>(null)
@@ -49,7 +63,8 @@ function loadProfile(): UserProfile {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return DEFAULT_PROFILE
-    return { ...DEFAULT_PROFILE, ...JSON.parse(raw) }
+    const parsed = JSON.parse(raw)
+    return { ...DEFAULT_PROFILE, ...parsed, wallet: { ...DEFAULT_PROFILE.wallet, ...parsed.wallet } }
   } catch {
     return DEFAULT_PROFILE
   }
@@ -84,8 +99,40 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ? prev
           : { ...prev, unlockedMineralIds: [...prev.unlockedMineralIds, mineralId] },
       ),
-    updateDossier: (fields) => setProfileState((prev) => ({ ...prev, dossier: { ...prev.dossier, ...fields } })),
+    updateDossier: (fields) =>
+      setProfileState((prev) => {
+        const nextDossier = { ...prev.dossier, ...fields }
+        const newlyRewarded: string[] = []
+        let bonusCoins = 0
+        for (const [key, value] of Object.entries(fields)) {
+          const wasEmpty = !prev.dossier[key as keyof typeof prev.dossier].trim()
+          const isNowFilled = Boolean(value && value.trim())
+          const alreadyRewarded = prev.dossierRewarded.includes(key)
+          if (wasEmpty && isNowFilled && !alreadyRewarded) {
+            newlyRewarded.push(key)
+            bonusCoins += DOSSIER_FIELD_REWARD_COINS
+          }
+        }
+        return {
+          ...prev,
+          dossier: nextDossier,
+          dossierRewarded: [...prev.dossierRewarded, ...newlyRewarded],
+          wallet: { ...prev.wallet, coins: prev.wallet.coins + bonusCoins },
+        }
+      }),
     dossierCompletion,
+    earnCoins: (amount) => setProfileState((prev) => ({ ...prev, wallet: { ...prev.wallet, coins: prev.wallet.coins + amount } })),
+    earnGems: (amount) => setProfileState((prev) => ({ ...prev, wallet: { ...prev.wallet, gems: prev.wallet.gems + amount } })),
+    spendCoins: (amount) => {
+      if (profile.wallet.coins < amount) return false
+      setProfileState((prev) => ({ ...prev, wallet: { ...prev.wallet, coins: prev.wallet.coins - amount } }))
+      return true
+    },
+    spendGems: (amount) => {
+      if (profile.wallet.gems < amount) return false
+      setProfileState((prev) => ({ ...prev, wallet: { ...prev.wallet, gems: prev.wallet.gems - amount } }))
+      return true
+    },
   }
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>

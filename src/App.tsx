@@ -7,6 +7,7 @@ import { Minerals } from './pages/Minerals'
 import { MoonCalendar } from './pages/MoonCalendar'
 import { Onboarding } from './pages/Onboarding'
 import { Profile } from './pages/Profile'
+import { Shop } from './pages/Shop'
 import { Tarot } from './pages/Tarot'
 import { Upgrade } from './pages/Upgrade'
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/compatibility" element={<Compatibility />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/upgrade" element={<Upgrade />} />
+        <Route path="/shop" element={<Shop />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
