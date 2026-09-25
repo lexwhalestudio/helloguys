@@ -42,7 +42,7 @@ export function Gift() {
         <button
           onClick={() => {
             if (!claimed) handleClaim()
-            navigate('/')
+            navigate('/reveal')
           }}
           className="w-full rounded-xl bg-mystic-600 py-3 font-semibold text-white"
         >

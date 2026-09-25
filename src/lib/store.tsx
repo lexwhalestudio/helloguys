@@ -21,6 +21,7 @@ export interface UserProfile {
   wallet: Wallet
   dossierRewarded: string[]
   firstRunComplete: boolean
+  firstReadingChoice: 'unlock' | 'later' | null
   dossier: {
     birthTime: string
     birthPlace: string
@@ -46,6 +47,7 @@ function blankProfile(email: string, password: string): UserProfile {
     wallet: { coins: 0, gems: 0 },
     dossierRewarded: [],
     firstRunComplete: false,
+    firstReadingChoice: null,
     dossier: EMPTY_DOSSIER,
   }
 }
@@ -115,6 +117,7 @@ interface StoreValue {
   logout: () => void
   completeOnboarding: (name: string, birthDate: string, gender: Gender) => void
   claimWelcomeGift: () => void
+  recordFirstReading: (choice: 'unlock' | 'later') => void
   setTier: (tier: SubscriptionTier) => void
   unlockMineral: (mineralId: string) => void
   updateDossier: (fields: Partial<UserProfile['dossier']>) => void
@@ -189,6 +192,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
               wallet: { coins: prev.wallet.coins + WELCOME_GIFT.coins, gems: prev.wallet.gems + WELCOME_GIFT.gems },
             },
       ),
+    recordFirstReading: (choice) =>
+      updateActive((prev) => (prev.firstReadingChoice ? prev : { ...prev, firstReadingChoice: choice })),
     setTier: (tier) => updateActive((prev) => ({ ...prev, tier })),
     unlockMineral: (mineralId) =>
       updateActive((prev) =>

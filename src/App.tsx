@@ -11,6 +11,7 @@ import { MoonCalendar } from './pages/MoonCalendar'
 import { Onboarding } from './pages/Onboarding'
 import { Privacy } from './pages/Privacy'
 import { Profile } from './pages/Profile'
+import { Reveal } from './pages/Reveal'
 import { Shop } from './pages/Shop'
 import { Tarot } from './pages/Tarot'
 import { Upgrade } from './pages/Upgrade'
@@ -33,6 +34,7 @@ function RequireOnboarding({ children }: { children: React.ReactNode }) {
   if (!hasAccount) return <Navigate to="/login" replace />
   if (!isOnboarded) return <Navigate to="/onboarding" replace />
   if (!profile.firstRunComplete) return <Navigate to="/guide" replace />
+  if (!profile.firstReadingChoice) return <Navigate to="/reveal" replace />
   return <>{children}</>
 }
 
@@ -62,6 +64,14 @@ function App() {
         element={
           <RequireProfile>
             <Gift />
+          </RequireProfile>
+        }
+      />
+      <Route
+        path="/reveal"
+        element={
+          <RequireProfile>
+            <Reveal />
           </RequireProfile>
         }
       />

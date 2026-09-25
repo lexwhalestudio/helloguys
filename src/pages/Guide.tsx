@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { PublicShell } from '../components/PublicShell'
+import { useStore } from '../lib/store'
 
 interface Slide {
   emoji: string
@@ -32,10 +33,13 @@ const SLIDES: Slide[] = [
 ]
 
 export function Guide() {
+  const { profile } = useStore()
   const navigate = useNavigate()
   const [index, setIndex] = useState(0)
   const isLast = index === SLIDES.length - 1
   const slide = SLIDES[index]
+
+  if (profile.firstRunComplete) return <Navigate to="/" replace />
 
   function goNext() {
     if (isLast) navigate('/gift')
